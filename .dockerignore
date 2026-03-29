@@ -1,0 +1,7 @@
+.git
+.gitignore
+.cursor
+node_modules
+dist
+build
+coverage
