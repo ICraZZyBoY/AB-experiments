@@ -6,7 +6,8 @@ COPY CMakeLists.txt ./
 COPY src ./src
 
 RUN cmake -S . -B build -DCMAKE_BUILD_TYPE=Release \
-    && cmake --build build --config Release -j"$(nproc)"
+    && cmake --build build --config Release -j1 \
+    && strip /app/build/ab_experiments_backend
 
 FROM ghcr.io/userver-framework/ubuntu-22.04-userver:latest
 

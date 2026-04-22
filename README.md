@@ -13,7 +13,8 @@ Minimal scaffold for an A/B experiments platform.
 
 - `create_db.sql` - initial PostgreSQL schema
 - `backend/` - minimal userver HTTP service
-- `frontend/` - React + Vite frontend placeholder
+- `frontend/` - React + Vite platform UI
+- `demo-client/` - simple client app with one button for A/B demo flow
 - `docker-compose.yml` - local environment for all services
 
 ## Run
@@ -28,6 +29,7 @@ docker compose up --build
 3. Open:
 
 - Frontend: `http://localhost:3000`
+- Demo client: `http://localhost:3001`
 - Backend health: `http://localhost:8080/health`
 - Backend client services: `http://localhost:8080/api/v1/client-services`
 - Backend monitor: `http://localhost:8081/service/monitor?format=json`
@@ -55,3 +57,25 @@ Current limitations:
 
 - Session tokens are stored in backend process memory, so they are reset after service restart.
 - Plain API keys are shown only once at creation time and are not stored by the frontend after page refresh.
+
+## Demo Client Flow
+
+Use `http://localhost:3001` to open a tiny client app that talks to the runtime API.
+
+Recommended demo setup in the platform UI:
+
+- Create a flag with key `demo_button_text`.
+- Create a feature with key `demo_button_click`.
+- Create a metric with type `COUNT` and `feature_key = demo_button_click`.
+- Attach that metric to an experiment.
+- Put the flag into experiment variants and set different `variant_value` texts.
+
+Then:
+
+1. Create an API key for your client service in the platform UI.
+2. Paste it into the demo client.
+3. Click `Reload assignment` to fetch runtime flags.
+4. Click the button to send events into `POST /api/v1/runtime/events`.
+5. To force a specific variant, open `http://localhost:3001/?test-id=<variant_id>`.
+
+The platform UI now shows `variant_id` inside experiment cards so it can be copied into `test-id`.

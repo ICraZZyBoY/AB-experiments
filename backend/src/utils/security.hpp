@@ -15,4 +15,6 @@ std::string HashApiKey(std::string_view api_key);
 
 std::string GeneratePlainApiKey();
 
+std::string GenerateExperimentSalt();
+
 }  // namespace ab_experiments::utils

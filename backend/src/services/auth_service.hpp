@@ -48,6 +48,12 @@ struct CreatedApiKey {
     std::string plain_api_key;
 };
 
+struct ApiKeyIdentity {
+    std::int64_t api_key_id;
+    std::int64_t client_service_id;
+    std::string name;
+};
+
 class AuthService final {
 public:
     AuthService(
@@ -84,6 +90,8 @@ public:
     std::vector<ApiKeyView> ListApiKeys(std::int64_t client_service_id) const;
 
     ApiKeyView RevokeApiKey(std::int64_t client_service_id, std::int64_t api_key_id) const;
+
+    ApiKeyIdentity AuthenticateApiKey(std::string_view plain_api_key) const;
 
 private:
     AuthResponse CreateAuthResponse(std::int64_t user_id) const;

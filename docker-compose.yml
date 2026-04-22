@@ -44,5 +44,14 @@ services:
     ports:
       - "3000:80"
 
+  demo-client:
+    build:
+      context: ./demo-client
+    container_name: ab-experiments-demo-client
+    depends_on:
+      - backend
+    ports:
+      - "3001:80"
+
 volumes:
   postgres_data:

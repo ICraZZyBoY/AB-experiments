@@ -85,8 +85,9 @@ CREATE TABLE Experiment (
     created_by_user_id  BIGINT     NOT NULL REFERENCES PlatformUser(id),
     name                TEXT       NOT NULL,
     description         TEXT,
-    status              TEXT       NOT NULL DEFAULT 'DRAFT', -- DRAFT/RUNNING/...
-    salt                TEXT       NOT NULL,                 -- для рандомизации
+    status              TEXT       NOT NULL DEFAULT 'DRAFT', -- DRAFT/IN_QUEUE/ADDED_IN_CONFIG/RUNNING/COMPLETED/PENDING_DECISION/CLOSED
+    salt                TEXT       NOT NULL,                 -- системная соль для стабильной рандомизации
+    duration_days       INT        NOT NULL DEFAULT 14,
     start_at            TIMESTAMPTZ,
     end_at              TIMESTAMPTZ,
     created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -246,6 +247,21 @@ CREATE INDEX idx_metricresult_experiment
 
 CREATE INDEX idx_metricresult_period
     ON MetricResult (period_start, period_end);
+
+CREATE TABLE ExperimentMetricCalculationState (
+    experiment_id          BIGINT PRIMARY KEY REFERENCES Experiment(id),
+    client_service_id      BIGINT      NOT NULL REFERENCES ClientService(id),
+    dirty                  BOOLEAN     NOT NULL DEFAULT TRUE,
+    dirty_reason           TEXT,
+    last_source_update_at  TIMESTAMPTZ,
+    last_assignment_at     TIMESTAMPTZ,
+    last_event_at          TIMESTAMPTZ,
+    last_calculated_at     TIMESTAMPTZ,
+    updated_at             TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_metriccalcstate_client_dirty
+    ON ExperimentMetricCalculationState (client_service_id, dirty);
 
 ------------------------------------------------------------
 -- 7. Конфиги и аудит

@@ -69,4 +69,8 @@ std::string GeneratePlainApiKey() {
     return "ab_live_" + GenerateRandomHex(24);
 }
 
+std::string GenerateExperimentSalt() {
+    return "exp_" + GenerateRandomHex(12);
+}
+
 }  // namespace ab_experiments::utils

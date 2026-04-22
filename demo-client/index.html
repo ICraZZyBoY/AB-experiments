@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AB Demo Client</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section class="panel hero">
+        <div>
+          <p class="eyebrow">Demo Client</p>
+          <h1>A/B Demo Button</h1>
+          <p class="subtitle">
+            Small client app for testing runtime flags, forced variant stickiness via
+            <code>?test-id=...</code>, and click metrics.
+          </p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Connection</h2>
+          <button id="reload-config" class="ghost-button" type="button">Reload assignment</button>
+        </div>
+
+        <form id="config-form" class="form">
+          <div class="grid two-columns">
+            <label>
+              API key
+              <input id="api-key" autocomplete="off" placeholder="Paste X-API-Key here" />
+            </label>
+
+            <label>
+              External user id
+              <input id="external-user-id" autocomplete="off" />
+            </label>
+
+            <label>
+              Device id
+              <input id="device-id" autocomplete="off" />
+            </label>
+
+            <label>
+              Button text flag key
+              <input id="flag-key" value="demo_button_text" autocomplete="off" />
+            </label>
+
+            <label>
+              Click feature key
+              <input id="feature-key" value="demo_button_click" autocomplete="off" />
+            </label>
+
+            <label>
+              Forced variant via query <code>test-id</code>
+              <input id="test-id" autocomplete="off" placeholder="e.g. 42" />
+            </label>
+          </div>
+
+          <div class="button-row">
+            <button type="submit">Save config</button>
+            <button id="clear-test-id" class="ghost-button" type="button">Clear forced variant</button>
+          </div>
+        </form>
+
+        <div class="hint-list">
+          <p>
+            Required platform setup:
+            create a flag like <code>demo_button_text</code>, a feature
+            <code>demo_button_click</code>, and a metric with type <code>COUNT</code>.
+          </p>
+          <p>
+            To pin the demo into a concrete variant, open the page with
+            <code>?test-id=&lt;variant_id&gt;</code>.
+          </p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Demo Button</h2>
+          <span id="assignment-badge" class="badge badge-waiting">not loaded</span>
+        </div>
+
+        <div class="demo-area">
+          <button id="demo-button" class="demo-button" type="button">Click me</button>
+          <div class="demo-stats">
+            <span>Local clicks: <strong id="local-clicks">0</strong></span>
+            <span>Last req id: <code id="last-req-id">n/a</code></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Runtime State</h2>
+          <span id="status-badge" class="badge badge-waiting">idle</span>
+        </div>
+
+        <div class="state-grid">
+          <div>
+            <h3>Assignment</h3>
+            <pre id="assignment-json" class="json-box">{}</pre>
+          </div>
+          <div>
+            <h3>Last Event</h3>
+            <pre id="event-json" class="json-box">{}</pre>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

@@ -312,6 +312,34 @@ ApiKeyView AuthService::RevokeApiKey(std::int64_t client_service_id, std::int64_
     return ReadApiKeyRow(result[0]);
 }
 
+ApiKeyIdentity AuthService::AuthenticateApiKey(std::string_view plain_api_key) const {
+    if (plain_api_key.empty()) {
+        throw userver::server::handlers::Unauthorized(
+            userver::server::handlers::ExternalBody{"X-API-Key header must not be empty"}
+        );
+    }
+
+    const auto result = pg_cluster_->Execute(
+        postgres::ClusterHostType::kMaster,
+        "SELECT id, client_service_id, name "
+        "FROM abtest.ApiKey "
+        "WHERE key_hash = $1 AND status = 'ACTIVE'",
+        utils::HashApiKey(plain_api_key)
+    );
+
+    if (result.IsEmpty()) {
+        throw userver::server::handlers::Unauthorized(
+            userver::server::handlers::ExternalBody{"API key is invalid or revoked"}
+        );
+    }
+
+    return ApiKeyIdentity{
+        result[0]["id"].As<std::int64_t>(),
+        result[0]["client_service_id"].As<std::int64_t>(),
+        result[0]["name"].As<std::string>(),
+    };
+}
+
 AuthResponse AuthService::CreateAuthResponse(std::int64_t user_id) const {
     auto user = GetPlatformUserById(user_id);
     return AuthResponse{CreateSessionToken(user), std::move(user)};

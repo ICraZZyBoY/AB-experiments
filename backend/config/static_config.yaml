@@ -41,6 +41,12 @@ components_manager:
       blocking_task_processor: fs-task-processor
       dns_resolver: async
 
+    config-build-scheduler:
+      build-interval-ms: 5000
+
+    metric-calculation-scheduler:
+      calculation-interval-ms: 5000
+
     handler-health:
       path: /health
       method: GET
@@ -61,6 +67,31 @@ components_manager:
       method: GET
       task_processor: main-task-processor
 
+    handler-config-versions:
+      path: /api/v1/config-versions
+      method: GET,POST
+      task_processor: main-task-processor
+
+    handler-experiments:
+      path: /api/v1/experiments
+      method: GET,POST,PATCH
+      task_processor: main-task-processor
+
+    handler-experiment-metrics:
+      path: /api/v1/experiment-metrics
+      method: GET,POST
+      task_processor: main-task-processor
+
+    handler-features:
+      path: /api/v1/features
+      method: GET,POST
+      task_processor: main-task-processor
+
+    handler-flags:
+      path: /api/v1/flags
+      method: GET,POST
+      task_processor: main-task-processor
+
     handler-platform-users:
       path: /api/v1/platform-users
       method: GET,POST
@@ -69,6 +100,26 @@ components_manager:
     handler-api-keys:
       path: /api/v1/api-keys
       method: GET,POST,DELETE
+      task_processor: main-task-processor
+
+    handler-metric-results:
+      path: /api/v1/metric-results
+      method: GET,POST
+      task_processor: main-task-processor
+
+    handler-metrics:
+      path: /api/v1/metrics
+      method: GET,POST
+      task_processor: main-task-processor
+
+    handler-runtime-flags:
+      path: /api/v1/runtime/flags
+      method: POST
+      task_processor: main-task-processor
+
+    handler-runtime-events:
+      path: /api/v1/runtime/events
+      method: POST
       task_processor: main-task-processor
 
     handler-server-monitor:
